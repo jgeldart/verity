@@ -18,7 +18,7 @@ module Verity
           options = {}
         end
 
-        arguments = args
+        @arguments = args
 
         options.each_pair do |option,value|
           unless value.is_a?(Proc)
