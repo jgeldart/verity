@@ -18,11 +18,11 @@ module Verity::Core::Base
       value = self.send(attribute)
 
       predicates[:positive].each do |predicate|
-        write_error(attribute, predicate.positive_error_for(value)) unless predicate.matches?(value)
+        write_error(attribute, predicate.positive_error_for(value)) unless predicate.satisfies?(self, value)
       end if predicates.has_key?(:positive)
 
       predicates[:negative].each do |predicate|
-        write_error(attribute, predicate.negative_error_for(value)) if predicate.matches?(value)
+        write_error(attribute, predicate.negative_error_for(value)) if predicate.satisfies?(self, value)
       end if predicates.has_key?(:negative)
 
     end

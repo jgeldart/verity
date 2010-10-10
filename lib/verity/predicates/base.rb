@@ -2,9 +2,10 @@ module Verity
   module Predicates
     class Base
 
-      attr_accessor :arguments
+      attr_accessor :arguments, :defer
 
       def initialize(*args)
+        @defer = {}
         configure(args)
       end
 
@@ -20,8 +21,24 @@ module Verity
         arguments = args
 
         options.each_pair do |option,value|
-          self.send("#{option}=",value)
+          unless value.is_a?(Proc)
+            set_named_argument(option, value)
+          else
+            @defer[option] = value
+          end
         end
+      end
+
+      def satisfies?(record, value)
+        @defer.each_pair do |option, block|
+          unless block.arity < 1
+            set_named_argument option, block.call(record)
+          else
+            set_named_argument option, block.call
+          end
+        end
+
+        return matches?(value)
       end
 
       def matches?(value)
@@ -34,6 +51,11 @@ module Verity
 
       def negative_error_for(value)
         "is invalid."
+      end
+
+      protected
+      def set_named_argument(name, value)
+        self.send("#{name}=",value)
       end
 
     end

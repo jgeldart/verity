@@ -8,6 +8,10 @@ module Verity::Core::DSL
   end
   module ClassMethods
 
+    def the(attribute_name)
+      return Proc.new { |r| r.send(attribute_name) }
+    end
+
     def method_missing(name, *args)
       begin
         super
