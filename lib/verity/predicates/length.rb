@@ -4,7 +4,7 @@ module Verity::Predicates
     attr_accessor :less_than
     def matches?(value)
       if less_than
-        value.length < less_than
+        [String, Symbol].include?(value.class) && (value.to_s.length < less_than)
       end
     end
   end

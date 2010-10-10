@@ -13,17 +13,49 @@ module Verity::Core::Base
   # @return [TrueClass, FalseClass] Is the instance valid?
   # @api public
   def valid?
-    valid = true
+    clear_validation_error_hash
     self.class.validations.each_pair do | attribute, predicates |
       value = self.send(attribute)
+
       predicates[:positive].each do |predicate|
-        valid &&= predicate.matches?(value)
+        write_error(attribute, predicate.positive_error_for(value)) unless predicate.matches?(value)
       end if predicates.has_key?(:positive)
+
       predicates[:negative].each do |predicate|
-        valid &&= !predicate.matches?(value)
+        write_error(attribute, predicate.negative_error_for(value)) if predicate.matches?(value)
       end if predicates.has_key?(:negative)
+
     end
-    return valid
+    return validation_errors.empty?
+  end
+
+  # A `Hash` of validation errors obtained after running the validations
+  # defined using `#valid?`. The `Hash` is keyed by attribute where each 
+  # value is an `Array` of `String`s.
+  #
+  # @example 
+  #   obj.validation_errors  #=> { :someattr => [ "is required." ] }
+  # @return [Hash{Symbol => Array<String>}] A `Hash` of error messages keyed by attribute name.
+  # @api public
+  def validation_errors
+    lazy_validation_error_hash
+  end
+
+  protected
+  def lazy_validation_error_hash
+    @validation_errors ||= empty_validation_error_hash
+  end
+    
+  def empty_validation_error_hash
+    Hash.new { |h,k| h[k] =[] }
+  end
+
+  def clear_validation_error_hash
+    @validation_errors = empty_validation_error_hash
+  end
+
+  def write_error(attribute, message)
+    self.lazy_validation_error_hash[attribute] << message
   end
 
   module ClassMethods

@@ -12,6 +12,14 @@ module Verity
         false
       end
 
+      def positive_error_for(value)
+        "is invalid."
+      end
+
+      def negative_error_for(value)
+        "is invalid."
+      end
+
     end
   end
 end
