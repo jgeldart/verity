@@ -63,12 +63,35 @@ values that are `nil`:
       login_must_not be_nil
     end
 
+Multiple validations may be defined against an attribute and all will be tested:
+
+    class User
+      verifiable
+
+      attr_accessor :login
+      login_must_not be_nil
+      login_must have_length(:at_least => 4)
+    end
+
+Predicates can take late-bound parameters, either positional or named:
+
+    class User
+      verifiable
+
+      attr_accessor :login, :star_count
+      login_must have_length, :at_least => 4
+      star_count_must be_greater_than, 5
+    end
+
 Defining new predicates is as simple as defining a new class that inherits from
 `Verity::Predicates::Base` and a class method (available to your class) that
 constructs an appropriate instance of your class. Methods defined within
 `Verity::Predicates` are automatically available to all classes which define
 `verifiable`. As with RSpec, it is through judicious use of these methods that 
 we gain our readability, so think carefully about how your definitions 'read'.
+In particular, be sparing with positional parameters (and treat them like
+direct and indirect objects in English) and use named parameters with keys that
+read like prepositional phrases (such as `with_domain` or `at_least`).
 
 [RSpec]: http://rspec.info/
 [Semantic Attributes]: http://github.com/cainlevy/semantic-attributes/
