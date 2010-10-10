@@ -12,7 +12,8 @@ module Verity::Core::DSL
       begin
         super
       rescue NameError
-        predicate = args[0]
+        predicate = args.shift
+        predicate.configure(*args)
         case name.to_s
         
         when /^(.*)_must$/
