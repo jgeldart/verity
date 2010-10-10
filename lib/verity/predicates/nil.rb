@@ -9,6 +9,9 @@ module Verity
         end
       end
 
+      # Is `true` when the attribute is `nil`.
+      # 
+      # @api public
       def be_nil
         Verity::Predicates::Nil::Predicate.new
       end
