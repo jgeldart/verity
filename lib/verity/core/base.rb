@@ -6,6 +6,7 @@ module Verity
       def self.included(klass)
         klass.class_eval do
           extend ClassMethods
+          include Verity::Core::DSL
         end
       end
 
@@ -15,7 +16,17 @@ module Verity
       # @return [TrueClass, FalseClass] Is the instance valid?
       # @api public
       def valid?
-        true
+        valid = true
+        self.class.validations.each_pair do | attribute, predicates |
+          value = self.send(attribute)
+          predicates[:positive].each do |predicate|
+            valid &&= predicate.matches?(value)
+          end if predicates.has_key?(:positive)
+          predicates[:negative].each do |predicate|
+            valid &&= !predicate.matches?(value)
+          end if predicates.has_key?(:negative)
+        end
+        return valid
       end
 
     end
@@ -24,7 +35,7 @@ module Verity
 
       def self.extended(klass)
         klass.class_eval do
-          @@validations = {}
+          @@validations = Hash.new { |hash, key| hash[key] = {} }
         end
       end
 

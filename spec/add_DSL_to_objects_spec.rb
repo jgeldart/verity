@@ -1,7 +1,7 @@
 require File.dirname(__FILE__) + "/spec_helper.rb"
 
 class User 
-  attr_accessor :login, :password, :password_confirmation, :email
+  attr_accessor :login
 end
 
 describe Object do
@@ -17,7 +17,7 @@ describe Object do
   end
 
   context "after DSL has been added" do
-    before(:each) do
+    before(:all) do
       User.verifiable
     end
     subject { User }
@@ -29,7 +29,7 @@ describe Object do
 
       it { should be_a(Hash) }
 
-      it { should eql({}) }
+      it { should be_empty }
     end
 
     context "instances" do
@@ -47,6 +47,38 @@ describe Object do
       end
     end
 
+    context "and validations defined" do
+      before(:all) do
+        class User
+          login_must_not be_nil
+        end
+      end
+      
+      context "validations" do
+        subject { User.validations }
+
+        it { should have_key(:login) }
+      end
+
+      context "an invalid instance" do
+        before(:each) do
+          @user = User.new
+        end
+        subject { @user }
+
+        it { should_not be_valid }
+      end
+
+      context "a valid instance" do
+        before(:each) do
+          @user = User.new
+          @user.login = "somelogin"
+        end
+        subject { @user }
+
+        it { should be_valid }
+      end
+    end
 
   end
 
