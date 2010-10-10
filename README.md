@@ -93,5 +93,34 @@ In particular, be sparing with positional parameters (and treat them like
 direct and indirect objects in English) and use named parameters with keys that
 read like prepositional phrases (such as `with_domain` or `at_least`).
 
+## Lazy Parameters
+
+Often we want to validate based on data only available at run-time, and often
+specific to the record being validated. Named predicate parameters in Verity
+support lazy evaluation using blocks. A block-valued parameter is evaluated at
+validation time to produce a value, which is then set on that predicate. The
+blocks may, optionally, take a parameter which is set to the record instance
+being validated. This may be used to retrieve attribute values at run-time. 
+
+    class Message
+      verifiable
+
+      attr_accessor :length, :message
+      message_must have_length, :exactly => lambda{|r| r.length}
+    end
+
+In fact, this usage is so important that we have a sugar defined for it using
+a method `the`:
+
+    class Message
+      verifiable
+
+      attr_accessor :length, :message
+      message_must have_length, :exactly => the(:length)
+    end
+
+It is planned to support this for positional parameters as well very shortly
+but this hasn't been implemented yet.
+
 [RSpec]: http://rspec.info/
 [Semantic Attributes]: http://github.com/cainlevy/semantic-attributes/
