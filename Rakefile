@@ -37,6 +37,13 @@ Spec::Rake::SpecTask.new(:rcov) do |spec|
   spec.rcov_opts = ['--exclude','spec,gems']
 end
 
+MetricFu::Configuration.run do |config|
+  #define which metrics you want to use
+  config.metrics  = [:churn, :saikuro, :flog, :flay]
+  config.graphs   = []
+end
+
+
 desc "Create yardocs according to .yardopts file"
 task :yardoc do
   `yardoc`
