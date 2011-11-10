@@ -4,3 +4,4 @@ coverage
 .yardoc
 doc
 tmp
+*.swp
