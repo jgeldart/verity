@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'rake'
-require 'spec'
-require 'metric_fu'
+require 'rspec'
 
 begin
   require 'jeweler'
@@ -13,7 +12,6 @@ begin
     gem.authors = ["Joe Geldart"]
     gem.files = FileList['lib/**/*.rb', 'doc/**/*', '[A-Z]*', 'spec/**/*', 'vendor/**/*'].to_a
     gem.has_rdoc = false
-    gem.has_yardoc = true
     gem.required_ruby_version = ">= 1.8.7"
     gem.add_development_dependency("rspec", ">= 1.3.0")
     gem.add_development_dependency("yard" , ">= 0.5.3")
@@ -24,25 +22,11 @@ rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
-require 'spec/rake/spectask'
-Spec::Rake::SpecTask.new(:test) do |t|
-  t.spec_opts = ['--options', "spec/spec.opts"]
-  t.spec_files = FileList['spec/**/*_spec.rb']
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:test) do |t|
+  t.rspec_opts = ["-c", "-f progress", "-r ./spec/spec_helper.rb"]
+  t.pattern = 'spec/**/*_spec.rb'
 end
-
-Spec::Rake::SpecTask.new(:rcov) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.pattern = 'spec/**/*_spec.rb'
-  spec.rcov = true
-  spec.rcov_opts = ['--exclude','spec,gems']
-end
-
-MetricFu::Configuration.run do |config|
-  #define which metrics you want to use
-  config.metrics  = [:churn, :saikuro, :flog, :flay]
-  config.graphs   = []
-end
-
 
 desc "Create yardocs according to .yardopts file"
 task :yardoc do
