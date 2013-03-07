@@ -1,10 +1,12 @@
 require 'spec_helper'
 
 module Verity::Predicates 
-  describe Empty do
+  describe Be do
 
-    it 'matches nil' do
-      expect(subject.matches?(nil)).to be_true
+    subject { Be.new('empty') }
+
+    it 'does not match nil' do
+      expect(subject.matches?(nil)).to be_false
     end
 
     it 'matches empty strings' do
