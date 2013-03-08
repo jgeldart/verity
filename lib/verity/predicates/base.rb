@@ -46,11 +46,11 @@ module Verity
       end
 
       def positive_error_for(value)
-        "is invalid."
+        "must be #{self.class.name.split('::').last.downcase}"
       end
 
       def negative_error_for(value)
-        "is invalid."
+        "must not be #{self.class.name.split('::').last.downcase}"
       end
 
       protected
