@@ -3,12 +3,13 @@ module Verity::Predicates
   class Be < Base
 
     def initialize(name, *args)
-      @predicate_name = name + "?"
+      @predicate_name = name
+      @method_name = name + "?"
       super(*args)
     end
 
     def matches?(value)
-      value.respond_to?(@predicate_name) && value.send(@predicate_name)
+      value.respond_to?(@method_name) && value.send(@method_name)
     end
 
     def positive_error_for(value)
