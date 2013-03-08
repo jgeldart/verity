@@ -62,7 +62,7 @@ module Verity::Core::Base
 
     def self.extended(klass)
       klass.class_eval do
-        @@validations = Hash.new { |hash, key| hash[key] = {} }
+        @validations = Hash.new { |hash, key| hash[key] = {} }
       end
     end
 
@@ -72,7 +72,7 @@ module Verity::Core::Base
     # @return [Hash] The validations defined on the class.
     # @api public
     def validations
-      @@validations
+      @validations
     end
 
   end

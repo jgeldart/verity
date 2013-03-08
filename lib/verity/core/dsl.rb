@@ -16,20 +16,23 @@ module Verity::Core::DSL
       begin
         super
       rescue NameError
-        predicate = args.shift
-        predicate.configure(*args)
         case name.to_s
-        
-        when /^(.*)_must$/
-          attribute = $1.to_sym
-          (validations[attribute][:positive] ||= []) << predicate
-          true
-        when /^(.*)_must_not$/
-          attribute = $1.to_sym
-          (validations[attribute][:negative] ||= []) << predicate
-          true
-        else
-          raise
+          when /^(.*)_must$/
+            predicate = args.shift
+            predicate.configure(*args)
+            attribute = $1.to_sym
+            (validations[attribute][:positive] ||= []) << predicate
+            true
+          when /^(.*)_must_not$/
+            predicate = args.shift
+            predicate.configure(*args)
+            attribute = $1.to_sym
+            (validations[attribute][:negative] ||= []) << predicate
+            true
+          when /^be_(.*)/
+            Verity::Predicates::Be.new($1)
+          else
+            raise
         end
       end
     end

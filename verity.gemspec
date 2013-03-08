@@ -36,23 +36,8 @@ Gem::Specification.new do |s|
     "spec/spec_helper.rb"
   ]
 
-  if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 3
-
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_development_dependency(%q<rspec>, [">= 1.3.0"])
-      s.add_development_dependency(%q<yard>, [">= 0.5.3"])
-      s.add_development_dependency(%q<yardstick>, [">= 0.1.0"])
-    else
-      s.add_dependency(%q<rspec>, [">= 1.3.0"])
-      s.add_dependency(%q<yard>, [">= 0.5.3"])
-      s.add_dependency(%q<yardstick>, [">= 0.1.0"])
-    end
-  else
-    s.add_dependency(%q<rspec>, [">= 1.3.0"])
-    s.add_dependency(%q<yard>, [">= 0.5.3"])
-    s.add_dependency(%q<yardstick>, [">= 0.1.0"])
-  end
+  s.add_development_dependency(%q<rspec>, [">= 2.0.0"])
+  s.add_development_dependency(%q<yard>, [">= 0.5.3"])
+  s.add_development_dependency(%q<yardstick>, [">= 0.1.0"])
 end
 
